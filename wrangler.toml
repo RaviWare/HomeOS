@@ -4,15 +4,16 @@
 name = "homeos"
 main = "worker/index.ts"
 compatibility_date = "2025-05-01"
+compatibility_flags = ["global_fetch_strictly_public"]
 
-# Serve the built Vite SPA from ./dist; the Worker handles /api/* and /healthz first.
+# Serve the built Vite SPA from ./dist. Run the Worker first ONLY for API + health
+# routes so the SPA (index.html) is served directly for everything else.
 [assets]
 directory = "./dist"
 binding = "ASSETS"
-run_worker_first = true
+run_worker_first = ["/api/*", "/healthz"]
 not_found_handling = "single-page-application"
 
-# Non-secret config (ANTHROPIC_API_KEY is set as a secret, not here).
 [vars]
 ANTHROPIC_MODEL = "claude-haiku-4-5"
 AI_ENABLED = "true"

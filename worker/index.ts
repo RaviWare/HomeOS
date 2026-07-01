@@ -137,6 +137,7 @@ export default {
  if (path === "/healthz") return jsonResponse({ ok: true, ai: env.AI_ENABLED !== "false" }, 200);
  if (path === "/api/ai/chat") { if (request.method !== "POST") return jsonResponse({ error: "Method not allowed." }, 405); return handleChat(request, env); }
  if (path === "/api/ai/ocr") { if (request.method !== "POST") return jsonResponse({ error: "Method not allowed." }, 405); return handleOcr(request, env); }
+ if (path.indexOf("/api/") === 0) return jsonResponse({ error: "Not found." }, 404);
  return env.ASSETS.fetch(request);
  }
 };
