@@ -1,0 +1,21 @@
+# Render Blueprint for HomeOS (https://render.com/docs/blueprint-spec)
+# One free web service, Docker runtime, health-checked. Set ANTHROPIC_API_KEY as a secret at deploy time.
+services:
+  - type: web
+    name: homeos
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5
+      - key: AI_DAILY_LIMIT
+        value: "300"
+      - key: AI_RATE_MAX
+        value: "20"

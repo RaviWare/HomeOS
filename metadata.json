@@ -1,0 +1,6 @@
+{
+  "name": "HomeOS",
+  "description": "Premium full-stack rental property management SaaS with digital notary, local ledger, and AI OCR document processing capabilities.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

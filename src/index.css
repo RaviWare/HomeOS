@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Base Premium Dark Setup - Vercel / Apple Silicon Aesthetic */
+html, body, #root {
+  background-color: #000000 !important;
+  color: #FAFAFA !important;
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  /* Ultra-subtle professional developer grid */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* 3D Flashcard flip utility classes */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Custom smooth transitions and animations */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .9; transform: scale(1.01); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Vercel & Apple Silicon Presentation Theme - High Contrast Monochrome
+   ========================================================================== */
+
+/* Main Viewport Background Override - Pure Pitch Black */
+.bg-\[\#0B1220\], .bg-slate-950, .bg-stone-950 {
+  background-color: #000000 !important;
+}
+
+/* Card Surfaces (Deep Obsidian Charcoal / Apple Silicon Black) */
+.bg-\[\#111827\], .bg-slate-900, .bg-zinc-900 {
+  background-color: #0A0A0C !important;
+  border-color: #1F1F23 !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.75) !important;
+}
+.bg-\[\#111827\]\/65 {
+  background-color: rgba(10, 10, 12, 0.65) !important;
+  backdrop-filter: blur(12px);
+}
+.bg-\[\#111827\]\/80 {
+  background-color: rgba(10, 10, 12, 0.8) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* Input Fields & Action Panels (Graphite / Silicon Oxide) */
+.bg-\[\#1F2937\], .bg-slate-800, .bg-zinc-800 {
+  background-color: #121215 !important;
+  border-color: #2E2E33 !important;
+}
+.bg-\[\#1F2937\]\/50 {
+  background-color: rgba(18, 18, 21, 0.5) !important;
+}
+.bg-\[\#1F2937\]\/30 {
+  background-color: rgba(18, 18, 21, 0.3) !important;
+}
+.hover\:bg-\[\#374151\]:hover, .hover\:bg-slate-700:hover, .hover\:bg-zinc-700:hover {
+  background-color: #1C1C21 !important;
+}
+
+/* Vercel Stark White Core Accents (replacing old Blue triggers) */
+.bg-\[\#2563EB\], .bg-blue-600, .bg-indigo-600 {
+  background-image: none !important;
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  border: 1px solid #FFFFFF !important;
+  transition: all 0.2s ease;
+}
+/* Ensure inner text is readable as black on white button */
+.bg-\[\#2563EB\] *, .bg-blue-600 * {
+  color: #000000 !important;
+}
+
+.bg-\[\#2563EB\]\/15 {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+.hover\:bg-\[\#1d4ed8\]:hover, .hover\:bg-blue-700:hover {
+  background-image: none !important;
+  background-color: #EAEAEA !important;
+  color: #000000 !important;
+}
+.text-\[\#2563EB\], .text-blue-600, .text-blue-400 {
+  color: #FFFFFF !important;
+}
+.border-\[\#2563EB\] {
+  border-color: #FFFFFF !important;
+}
+.focus\:border-\[\#2563EB\]:focus {
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Razor-thin Geometric Boundaries (Vercel Style) */
+.border-\[\#374151\], .border-slate-800, .border-zinc-800 {
+  border-color: #1F1F23 !important;
+}
+.border-\[\#374151\]\/30 {
+  border-color: rgba(31, 31, 35, 0.3) !important;
+}
+.border-\[\#374151\]\/50 {
+  border-color: rgba(31, 31, 35, 0.5) !important;
+}
+.border-\[\#374151\]\/60 {
+  border-color: rgba(31, 31, 35, 0.6) !important;
+}
+
+/* Metadata Text (Silicon Silver & Matte Grey) */
+.text-\[\#9CA3AF\], .text-slate-400, .text-zinc-400 {
+  color: #8E8E93 !important;
+}
+.text-stone-300, .text-gray-300, .text-zinc-300 {
+  color: #E5E5EA !important;
+}
+.text-white, .text-zinc-100 {
+  color: #FAFAFA !important;
+}
+
+/* Custom premium chip background gradients for that Vercel Matte Glass aesthetic */
+.premium-silicon-chip {
+  background: #0A0A0C;
+  border: 1px solid #1F1F23;
+  position: relative;
+  overflow: hidden;
+}
+.premium-silicon-chip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+/* Scrollbars fine-tuning */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #1F1F23;
+  border-radius: 9px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2E2E33;
+}
+
+/* Accent text-color sync: .bg-[#2563EB] renders a white background, so labels placed directly on it must be black. This overrides the later .text-white rule that won by source order and made onboarding step pills white-on-white. */
+.bg-\[\#2563EB\].text-white,
+.bg-blue-600.text-white,
+.bg-indigo-600.text-white {
+ color: #000000 !important;
+}
+ 
+ /* Smooth page / category transitions */
+ @keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px) scale(0.995); }
+  to { opacity: 1; transform: none; }
+ }
+ .animate-pageEnter { animation: pageEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+ @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+ }
+ .animate-fadeIn { animation: fadeIn 0.25s ease-out both; }
+ @keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+ }
+ .animate-fadeInUp { animation: fadeInUp 0.3s ease-out both; }
+ 
+
+/* Clickable affordance: interactive elements show a pointer cursor (Tailwind v4 preflight no longer sets this) */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+summary,
+label[for],
+select {
+ cursor: pointer;
+}
+button:disabled,
+[aria-disabled="true"] {
+ cursor: not-allowed;
+}
