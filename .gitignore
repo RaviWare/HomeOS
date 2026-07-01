@@ -21,3 +21,8 @@ yarn-debug.log*
 .DS_Store
 .vscode/
 .idea/
+
+# cloudflare / wrangler
+.wrangler/
+.dev.vars
+.dev.vars.*
