@@ -10,13 +10,15 @@
     "clean": "rm -rf dist .wrangler",
     "lint": "tsc --noEmit",
     "cf:dev": "wrangler dev",
- "cf:deploy": "vite build && wrangler deploy"
+    "cf:deploy": "vite build && wrangler deploy"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.109.0",
+    "@clerk/react": "^6.12.1",
+    "@clerk/themes": "^2.4.57",
     "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",

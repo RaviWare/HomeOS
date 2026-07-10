@@ -20,7 +20,7 @@
   const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click();
   document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 1500);
  }
- const here = () => (typeof location !== "undefined" ? location.href : "https://homeos.app");
+ const here = () => (typeof location !== "undefined" ? location.href : "https://homeos.pro");
  const trunc = (s: string, n: number) => (s.length > n ? s.slice(0, n - 3) + "..." : s);
  function shareTelegram(text: string) { window.open("https://t.me/share/url?url=" + encodeURIComponent(here()) + "&text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer"); }
  function shareWhatsApp(text: string) { window.open("https://wa.me/?text=" + encodeURIComponent(text + "\n\nvia HomeOS " + here()), "_blank", "noopener,noreferrer"); }
@@ -31,7 +31,7 @@
   const [isOpen, setIsOpen] = useState(false);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([
-  { role: "model", text: "Hi! Ask me anything about your homes - rent, deposits, taxes, utilities, documents, leases, or maintenance - and I will answer instantly from your own records, right here on your device.\n\nTry:\n- Savings this year\n- Tell me about 2015\n- Highest electricity bill\n- How many homes have I lived in\n\nThen copy, share to WhatsApp / Telegram / X, or post it as a branded card." }
+  { role: "model", text: "Hi! Ask me anything about your homes — rent, deposits, taxes, utilities, documents, leases, or maintenance — and I will answer from your encrypted HomeOS workspace.\n\nTry:\n- Savings this year\n- Tell me about 2015\n- Highest electricity bill\n- How many homes have I lived in\n\nThen copy, share, or export as a card." }
   ]);
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -59,26 +59,26 @@
   };
   const setSampleQuery = (q: string) => setInput(q);
  
-  const actBtn = "w-7 h-7 flex items-center justify-center rounded-md bg-[#111827] hover:bg-[#374151] border border-[#374151]/60 text-stone-300 text-[10px] font-black transition-all active:scale-90 cursor-pointer";
+  const actBtn = "w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center rounded-md bg-[#111827] hover:bg-[#374151] border border-[#374151]/60 text-stone-300 text-[10px] font-black transition-all active:scale-90 cursor-pointer";
   return (
   <>
   {!isOpen && (
-  <button onClick={() => setIsOpen(true)} className="fixed bottom-6 right-6 bg-[#2563EB] hover:bg-[#1d4ed8] text-white p-4 rounded-full shadow-2xl shadow-[#2563EB]/30 flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95 z-40 border border-white/10" title="Ask HomeOS">
-  <Brain className="w-6 h-6 animate-pulse text-white" />
-  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span><span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#10B981] border-2 border-[#0B1220]"></span></span>
+  <button onClick={() => setIsOpen(true)} className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-3 sm:bottom-6 sm:right-6 bg-white text-black p-3.5 sm:p-4 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all hover:scale-105 active:scale-95 z-40 border border-white min-w-[52px] min-h-[52px]" title="Ask HomeOS" aria-label="Open HomeOS assistant">
+  <Brain className="w-6 h-6 animate-pulse text-black" />
+  <span className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span><span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#10B981] border-2 border-black"></span></span>
   </button>
   )}
   {isOpen && (
-  <div className="fixed bottom-5 right-5 w-[calc(100vw-2.5rem)] max-w-[400px] bg-[#0B1220] border border-[#374151] rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden z-50 h-[560px] max-h-[calc(100vh-2.5rem)] animate-fadeInUp">
-  <div className="bg-gradient-to-r from-[#1F2937] to-[#111827] px-4 py-3 flex items-center justify-between border-b border-[#374151]">
-  <div className="flex items-center gap-2.5">
-  <div className="p-2 bg-[#2563EB] rounded-xl text-white shadow-lg shadow-[#2563EB]/30"><Brain className="w-4 h-4" /></div>
-  <div>
+  <div className="fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-5 sm:right-5 w-full sm:w-[calc(100vw-2.5rem)] sm:max-w-[400px] bg-[#0A0A0C] border border-[#1F1F23] sm:rounded-2xl rounded-t-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden z-50 h-[min(92dvh,640px)] sm:h-[560px] max-h-[calc(100dvh-env(safe-area-inset-top))] animate-fadeInUp safe-bottom">
+  <div className="bg-[#121215] px-3 sm:px-4 py-3 flex items-center justify-between border-b border-[#1F1F23] shrink-0">
+  <div className="flex items-center gap-2.5 min-w-0">
+  <div className="p-2 bg-white rounded-xl text-black shrink-0"><Brain className="w-4 h-4" /></div>
+  <div className="min-w-0">
   <span className="text-xs font-black text-white block leading-tight">HomeOS Assistant</span>
-  <span className="text-[9px] font-bold text-[#10B981] uppercase tracking-wider flex items-center gap-1"><Zap className="w-2.5 h-2.5" /> Instant - on device</span>
+  <span className="text-[9px] font-bold text-[#10B981] uppercase tracking-wider flex items-center gap-1"><Zap className="w-2.5 h-2.5" /> Instant · private</span>
   </div>
   </div>
-  <button onClick={() => setIsOpen(false)} className="text-[#9CA3AF] hover:text-white transition-all cursor-pointer p-1 hover:bg-white/5 rounded-lg"><X className="w-5 h-5" /></button>
+  <button onClick={() => setIsOpen(false)} className="text-[#9CA3AF] hover:text-white transition-all cursor-pointer p-2.5 hover:bg-white/5 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Close assistant"><X className="w-5 h-5" /></button>
   </div>
   <div ref={scrollRef} className="flex-1 p-4 flex flex-col gap-3.5 overflow-y-auto">
   {messages.map((m, idx) => {

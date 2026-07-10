@@ -358,14 +358,17 @@
   if (!_model) _model = buildModel();
   return _model;
  }
- export const SEED_VERSION = "homeos-demo-25yr-v2";
+ // v3: seed demo records only — no auto-login session so the marketing site is the default landing.
+ export const SEED_VERSION = "homeos-demo-25yr-v3";
  export function installDemoData(): void {
   try {
   if (typeof localStorage === "undefined") return;
   if (localStorage.getItem("rv_seed_version") === SEED_VERSION) return;
   const m = generateDemoModel();
   const w = (k: string, v: any) => localStorage.setItem(k, JSON.stringify(v));
-  w("rv_session", m.session); w("rv_properties", m.properties); w("rv_leases", m.leases);
+  // Intentionally do not set rv_session — visitors land on the marketing site first.
+  localStorage.removeItem("rv_session");
+  w("rv_properties", m.properties); w("rv_leases", m.leases);
   w("rv_transactions", m.transactions); w("rv_utilities", m.utilities); w("rv_tickets", m.tickets);
   w("rv_documents", m.documents); w("rv_timeline", m.timeline); w("rv_activity", m.activity);
   w("rv_suggestions", m.suggestions); w("rv_notifications", m.notifications);

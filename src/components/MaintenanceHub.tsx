@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Wrench,
   Plus,
@@ -13,6 +13,15 @@ import {
 } from 'lucide-react';
 import { MaintenanceTicket } from '../types';
 import Pagination from './Pagination';
+import {
+  C,
+  DatasetTable,
+  PercentDistribution,
+  ViewModeToggle,
+  inr,
+  pct,
+  type HubViewMode,
+} from './hub/ModuleAnalytics';
 
 interface MaintenanceHubProps {
   tickets: MaintenanceTicket[];
@@ -30,6 +39,9 @@ export default function MaintenanceHub({
   const [showAddTicketModal, setShowAddTicketModal] = useState(false);
  const [lanePage, setLanePage] = useState<Record<string, number>>({});
   const [selectedTicket, setSelectedTicket] = useState<MaintenanceTicket | null>(null);
+  const [hubView, setHubView] = useState<HubViewMode>('cards');
+  const [filterPriority, setFilterPriority] = useState<string>('All');
+  const [filterStatus, setFilterStatus] = useState<string>('All');
 
   // New ticket state
   const [selPropId, setSelPropId] = useState(properties[0]?.id || '');
@@ -99,35 +111,161 @@ export default function MaintenanceHub({
     .filter((t) => t.status === 'Resolved')
     .reduce((sum, t) => sum + (t.actualCost || t.estimatedCost), 0);
 
+  const statusSegs = useMemo(() => {
+    const counts = {
+      Pending: tickets.filter((t) => t.status === 'Pending').length,
+      'In Progress': tickets.filter((t) => t.status === 'In Progress').length,
+      Resolved: tickets.filter((t) => t.status === 'Resolved').length,
+    };
+    return [
+      { key: 'Pending', label: 'Pending', value: counts.Pending, color: C.down, filterValue: 'Pending' },
+      { key: 'In Progress', label: 'In progress', value: counts['In Progress'], color: C.warn, filterValue: 'In Progress' },
+      { key: 'Resolved', label: 'Resolved', value: counts.Resolved, color: C.up, filterValue: 'Resolved' },
+    ].filter((s) => s.value > 0);
+  }, [tickets]);
+
+  const prioritySegs = useMemo(() => {
+    const u = tickets.filter((t) => t.priority === 'Urgent').length;
+    const m = tickets.filter((t) => t.priority === 'Medium').length;
+    const l = tickets.filter((t) => t.priority === 'Low').length;
+    return [
+      { key: 'Urgent', label: 'Urgent', value: u, color: C.down, filterValue: 'Urgent' },
+      { key: 'Medium', label: 'Medium', value: m, color: C.warn, filterValue: 'Medium' },
+      { key: 'Low', label: 'Low', value: l, color: C.flat, filterValue: 'Low' },
+    ].filter((s) => s.value > 0);
+  }, [tickets]);
+
+  const filteredTickets = useMemo(() => {
+    return tickets.filter((t) => {
+      if (filterStatus !== 'All' && t.status !== filterStatus) return false;
+      if (filterPriority !== 'All' && t.priority !== filterPriority) return false;
+      return true;
+    });
+  }, [tickets, filterStatus, filterPriority]);
+
+  const openCount = tickets.filter((t) => t.status !== 'Resolved').length;
+  const resolvePct = tickets.length
+    ? Math.round((tickets.filter((t) => t.status === 'Resolved').length / tickets.length) * 100)
+    : 0;
+
   return (
-    <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto max-w-7xl w-full mx-auto">
+    <div className="flex-1 flex flex-col gap-4 p-4 sm:p-6 overflow-y-auto max-w-7xl w-full mx-auto">
       
       {/* Title & Overview */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#374151] pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1F1F23] pb-4">
         <div>
           <h2 className="text-xl font-extrabold text-white tracking-tight">Maintenance & Repair Ops</h2>
-          <p className="text-xs text-[#9CA3AF]">Manage active work lanes, coordinate vendors, and audit mechanical expenditures.</p>
+          <p className="text-xs text-[#9CA3AF]">
+            Graphs · dataset · kanban — synced to live tickets
+          </p>
         </div>
         
-        <div className="flex gap-3 items-center self-start md:self-auto">
-          <div className="bg-[#111827] border border-[#374151] px-3 py-1.5 rounded-xl flex items-center gap-2">
-            <span className="text-[10px] text-[#9CA3AF] uppercase font-bold">Maintenance Expenditure</span>
-            <span className="text-xs font-extrabold text-white">₹{totalSpent.toLocaleString()}</span>
+        <div className="flex flex-wrap gap-2 items-center self-start md:self-auto">
+          <ViewModeToggle
+            modes={[
+              { id: 'cards', label: 'Kanban' },
+              { id: 'graphs', label: 'Graphs' },
+              { id: 'dataset', label: 'Dataset' },
+            ]}
+            value={hubView === 'list' ? 'cards' : hubView}
+            onChange={setHubView}
+          />
+          <div className="bg-[#0A0A0C] border border-[#1F1F23] px-3 py-1.5 rounded-xl flex items-center gap-2">
+            <span className="text-[10px] text-[#9CA3AF] uppercase font-bold">Spend</span>
+            <span className="text-xs font-extrabold text-white">{inr(totalSpent)}</span>
           </div>
           <button
             onClick={() => setShowAddTicketModal(true)}
-            className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-[#2563EB]/15 cursor-pointer"
+            className="bg-white text-black px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            <span>Open Service Ticket</span>
+            <span>Open ticket</span>
           </button>
         </div>
       </div>
 
+      {/* KPIs with % */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {[
+          { l: 'Open', v: String(openCount), s: `${pct(openCount, tickets.length || 1)}% of book`, c: openCount ? C.warn : C.up },
+          { l: 'Resolved rate', v: `${resolvePct}%`, s: `${tickets.filter((t) => t.status === 'Resolved').length} done`, c: C.up },
+          { l: 'Urgent', v: String(tickets.filter((t) => t.priority === 'Urgent' && t.status !== 'Resolved').length), s: 'Open urgent', c: C.down },
+          { l: 'Total tickets', v: String(tickets.length), s: `${filteredTickets.length} filtered`, c: C.ink },
+        ].map((k) => (
+          <div key={k.l} className="rounded-xl border border-[#1F1F23] bg-[#0A0A0C] p-3 min-h-[72px] flex flex-col justify-between">
+            <span className="text-[9px] font-bold uppercase text-[#71717A]">{k.l}</span>
+            <div>
+              <p className="text-lg font-black tabular-nums" style={{ color: k.c }}>{k.v}</p>
+              <p className="text-[10px] text-[#71717A] font-medium">{k.s}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {hubView === 'graphs' && (
+        <div className="grid lg:grid-cols-2 gap-3">
+          <PercentDistribution
+            title="Status mix"
+            subtitle="Click to filter kanban/dataset"
+            segments={statusSegs}
+            total={tickets.length}
+            activeKey={filterStatus === 'All' ? null : filterStatus}
+            onSelect={(seg) =>
+              setFilterStatus(filterStatus === seg.filterValue ? 'All' : seg.filterValue || 'All')
+            }
+          />
+          <PercentDistribution
+            title="Priority mix"
+            subtitle="Urgent · medium · low"
+            segments={prioritySegs}
+            total={tickets.length}
+            activeKey={filterPriority === 'All' ? null : filterPriority}
+            onSelect={(seg) =>
+              setFilterPriority(filterPriority === seg.filterValue ? 'All' : seg.filterValue || 'All')
+            }
+          />
+        </div>
+      )}
+
+      {hubView === 'dataset' && (
+        <DatasetTable
+          columns={[
+            { key: 'title', label: 'Ticket' },
+            { key: 'property', label: 'Property' },
+            { key: 'priority', label: 'Priority' },
+            { key: 'status', label: 'Status' },
+            { key: 'cost', label: 'Est. cost', align: 'right' },
+            { key: 'vendor', label: 'Vendor' },
+          ]}
+          rows={filteredTickets.map((t) => ({
+            id: t.id,
+            tone:
+              t.status === 'Resolved' ? C.up : t.priority === 'Urgent' ? C.down : C.warn,
+            cells: {
+              title: <span className="font-semibold text-white">{t.title}</span>,
+              property: <span className="text-[#8E8E93]">{t.propertyName}</span>,
+              priority: t.priority,
+              status: t.status,
+              cost: inr(t.estimatedCost),
+              vendor: <span className="text-[#71717A]">{t.vendorName}</span>,
+            },
+          }))}
+          onRowClick={(id) => {
+            const t = tickets.find((x) => x.id === id);
+            if (t) setSelectedTicket(t);
+          }}
+          empty="No tickets match filters"
+        />
+      )}
+
       {/* Kanban Board Lanes */}
+      {hubView === 'cards' && (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {lanes.map((lane) => {
-          const laneTickets = tickets.filter((t) => t.status === lane.id);
+          const laneTickets = tickets
+            .filter((t) => t.status === lane.id)
+            .filter((t) => filterPriority === 'All' || t.priority === filterPriority)
+            .filter((t) => filterStatus === 'All' || t.status === filterStatus);
  const LP = 6;
  const cp = Math.min(Math.max(1, lanePage[lane.id] || 1), Math.max(1, Math.ceil(laneTickets.length / LP)));
  const shown = laneTickets.slice((cp - 1) * LP, cp * LP);
@@ -216,6 +354,7 @@ export default function MaintenanceHub({
           );
         })}
       </div>
+      )}
 
       {/* DETAIL DRAWER / POPUP */}
       {selectedTicket && (

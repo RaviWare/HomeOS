@@ -182,23 +182,252 @@ body {
  color: #000000 !important;
 }
  
- /* Smooth page / category transitions */
- @keyframes pageEnter {
-  from { opacity: 0; transform: translateY(10px) scale(0.995); }
-  to { opacity: 1; transform: none; }
- }
- .animate-pageEnter { animation: pageEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
- @keyframes fadeIn {
+/* Premium app page transitions */
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.992);
+    filter: blur(6px);
+  }
+  55% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+@keyframes pageEnterSoft {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-pageEnter {
+  animation: pageEnter 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform, filter;
+  transform-origin: 50% 0%;
+}
+/* Stagger children inside a page shell */
+.page-stagger > * {
+  animation: pageEnterSoft 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.page-stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.page-stagger > *:nth-child(2) { animation-delay: 0.06s; }
+.page-stagger > *:nth-child(3) { animation-delay: 0.1s; }
+.page-stagger > *:nth-child(4) { animation-delay: 0.14s; }
+.page-stagger > *:nth-child(5) { animation-delay: 0.18s; }
+.page-stagger > *:nth-child(6) { animation-delay: 0.22s; }
+.page-stagger > *:nth-child(7) { animation-delay: 0.26s; }
+.page-stagger > *:nth-child(8) { animation-delay: 0.3s; }
+.page-stagger > *:nth-child(n+9) { animation-delay: 0.32s; }
+
+@keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
- }
- .animate-fadeIn { animation: fadeIn 0.25s ease-out both; }
- @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(8px); }
+}
+.animate-fadeIn { animation: fadeIn 0.28s ease-out both; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
- }
- .animate-fadeInUp { animation: fadeInUp 0.3s ease-out both; }
- 
+}
+.animate-fadeInUp { animation: fadeInUp 0.36s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pageEnter,
+  .page-stagger > *,
+  .animate-fadeIn,
+  .animate-fadeInUp {
+    animation: fadeIn 0.01ms both !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   Marketing site — brand-aligned motion & surfaces
+   ========================================================================== */
+@keyframes mkt-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes mkt-glow {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.55; }
+}
+@keyframes mkt-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes mkt-line-draw {
+  from { stroke-dashoffset: 400; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mkt-rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mkt-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mkt-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes mkt-border-glow {
+  0%, 100% { border-color: rgba(255, 255, 255, 0.08); }
+  50% { border-color: rgba(255, 255, 255, 0.22); }
+}
+
+.animate-mkt-float { animation: mkt-float 6s ease-in-out infinite; }
+.animate-mkt-glow { animation: mkt-glow 4s ease-in-out infinite; }
+.animate-mkt-rise { animation: mkt-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-mkt-scale { animation: mkt-scale-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-mkt-marquee { animation: mkt-marquee 32s linear infinite; }
+.animate-mkt-border { animation: mkt-border-glow 3s ease-in-out infinite; }
+
+.mkt-shimmer-text {
+  background: linear-gradient(90deg, #8E8E93 0%, #FAFAFA 40%, #8E8E93 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: mkt-shimmer 4s linear infinite;
+}
+
+.mkt-grid-bg {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 255, 255, 0.07), transparent),
+    radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 24px 24px;
+}
+
+.mkt-card {
+  background: #0A0A0C;
+  border: 1px solid #1F1F23;
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.mkt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+.mkt-card:hover {
+  border-color: #2E2E33;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+}
+
+.mkt-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #FFFFFF;
+  color: #000000 !important;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  border: 1px solid #FFFFFF;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.mkt-btn-primary:hover {
+  background: #EAEAEA !important;
+  color: #000000 !important;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+}
+.mkt-btn-primary:active { transform: scale(0.98); }
+.mkt-btn-primary * { color: #000000 !important; }
+
+.mkt-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: #FAFAFA;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  border: 1px solid #1F1F23;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+.mkt-btn-ghost:hover {
+  border-color: #2E2E33;
+  background: rgba(255, 255, 255, 0.04);
+}
+.mkt-btn-ghost:active { transform: scale(0.98); }
+
+.mkt-stagger > * { opacity: 0; animation: mkt-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.mkt-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.mkt-stagger > *:nth-child(2) { animation-delay: 0.12s; }
+.mkt-stagger > *:nth-child(3) { animation-delay: 0.19s; }
+.mkt-stagger > *:nth-child(4) { animation-delay: 0.26s; }
+.mkt-stagger > *:nth-child(5) { animation-delay: 0.33s; }
+.mkt-stagger > *:nth-child(6) { animation-delay: 0.4s; }
+.mkt-stagger > *:nth-child(7) { animation-delay: 0.47s; }
+.mkt-stagger > *:nth-child(8) { animation-delay: 0.54s; }
+.mkt-stagger > *:nth-child(9) { animation-delay: 0.61s; }
+
+/* Footer motion */
+@keyframes mkt-shimmer-line {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+@keyframes mkt-footer-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.12); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+}
+@keyframes mkt-footer-col-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-mkt-shimmer-line { animation: mkt-shimmer-line 3.5s ease-in-out infinite; }
+.mkt-footer-pulse { animation: mkt-footer-pulse 2.8s ease-in-out infinite; }
+.mkt-footer-col {
+  animation: mkt-footer-col-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.mkt-footer-link-item {
+  animation: mkt-footer-col-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.mkt-footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  position: relative;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #8E8E93;
+  padding: 0.3rem 0;
+  transition: color 0.2s ease;
+}
+.mkt-footer-link:hover { color: #FAFAFA; }
+.mkt-footer-link-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0.15rem;
+  height: 1px;
+  width: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.7), transparent);
+  transition: width 0.25s ease;
+}
+.mkt-footer-link:hover .mkt-footer-link-bar { width: 1.25rem; }
+.mkt-footer-cta {
+  background: linear-gradient(135deg, #0A0A0C 0%, #0E0E12 50%, #0A0A0C 100%);
+}
 
 /* Clickable affordance: interactive elements show a pointer cursor (Tailwind v4 preflight no longer sets this) */
 button:not(:disabled),
@@ -211,4 +440,319 @@ select {
 button:disabled,
 [aria-disabled="true"] {
  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Mobile-first: safe areas, touch, overflow, a11y
+   ========================================================================== */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+.min-h-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Prefer 16px inputs on iOS to avoid zoom-on-focus; keep compact look via line-height */
+@media (max-width: 640px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Auth fields — kill browser autofill yellow/white flash; keep premium dark look */
+.auth-field input:-webkit-autofill,
+.auth-field input:-webkit-autofill:hover,
+.auth-field input:-webkit-autofill:focus,
+.auth-field input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fafafa !important;
+  caret-color: #fafafa;
+  box-shadow: 0 0 0 1000px #0c0c0f inset !important;
+  transition: background-color 99999s ease-out 0s;
+  border-radius: inherit;
+}
+.auth-field {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+.auth-field:focus-within {
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  background-color: #121216 !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 24px rgba(255, 255, 255, 0.06);
+}
+.auth-field:hover:not(:focus-within) {
+  border-color: rgba(255, 255, 255, 0.14);
+  background-color: #101014;
+}
+
+/* ── Clerk auth embed: clean stack, no overlaps ── */
+.clerk-auth-shell,
+.clerk-auth-fields {
+  --clerk-color-background: transparent;
+  width: 100%;
+  /* height must stay content-sized — never stretch Clerk into a tall empty box */
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible;
+}
+/* Kill Clerk stretch / vertical centering that creates huge empty gaps */
+.clerk-auth-shell .cl-rootBox,
+.clerk-auth-shell .cl-cardBox,
+.clerk-auth-shell .cl-card,
+.clerk-auth-shell .cl-main,
+.clerk-auth-shell .cl-scrollBox,
+.clerk-auth-fields .cl-rootBox,
+.clerk-auth-fields .cl-cardBox,
+.clerk-auth-fields .cl-card,
+.clerk-auth-fields .cl-main,
+.clerk-auth-fields .cl-scrollBox {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  flex: none !important;
+  transition: none !important;
+}
+.clerk-auth-fields .cl-loading,
+.clerk-auth-fields [class*="Spinner"],
+.clerk-auth-fields [class*="spinner"] {
+  min-height: 0 !important;
+}
+/* Keep social + fields from collapsing while scripts load */
+.clerk-auth-shell .cl-socialButtonsBlockButton,
+.clerk-auth-fields .cl-socialButtonsBlockButton {
+  min-height: 2.75rem !important;
+}
+/* Our own title — hide Clerk header completely */
+.clerk-auth-shell .cl-header,
+.clerk-auth-fields .cl-header {
+  display: none !important;
+}
+/* Footer / branding / development mode */
+.clerk-auth-shell .cl-footer,
+.clerk-auth-shell .cl-footerPages,
+.clerk-auth-shell .cl-footerAction,
+.clerk-auth-shell .cl-badge,
+.clerk-auth-shell a[href*="clerk.com"],
+.clerk-auth-shell [class*="development"],
+.clerk-auth-shell [class*="Development"],
+.clerk-auth-shell [class*="Footer"],
+.clerk-auth-shell [data-localization-key*="development"],
+.clerk-auth-shell [data-localization-key*="secured"],
+.clerk-auth-fields .cl-footer,
+.clerk-auth-fields .cl-footerAction,
+.clerk-auth-fields .cl-badge {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+/* ── Kill “Last used” badge that overlaps Google button ── */
+.clerk-auth-shell .cl-lastAuthenticationStrategy,
+.clerk-auth-shell [class*="lastAuthentication"],
+.clerk-auth-shell [class*="LastAuthentication"],
+.clerk-auth-shell [class*="lastUsed"],
+.clerk-auth-shell [class*="LastUsed"],
+.clerk-auth-shell .cl-socialButtonsBlockButtonArrow,
+.clerk-auth-shell .cl-socialButtonsBlockButton .cl-badge,
+.clerk-auth-shell button[data-provider] .cl-badge,
+.clerk-auth-shell button[data-provider] [class*="lastAuthentication"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+/* Social buttons — full width, no overflow badges */
+.clerk-auth-shell .cl-socialButtons,
+.clerk-auth-shell .cl-socialButtonsRoot {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+}
+.clerk-auth-shell button[data-provider="oauth_google"],
+.clerk-auth-shell .cl-socialButtonsBlockButton {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #fafafa !important;
+  border-radius: 0.75rem !important;
+  min-height: 2.75rem !important;
+  height: 2.75rem !important;
+  max-height: 2.75rem !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+/* Fields — consistent stack, no overlap */
+.clerk-auth-shell .cl-form,
+.clerk-auth-shell .cl-formFields {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.875rem !important;
+}
+.clerk-auth-shell .cl-formFieldRow {
+  width: 100% !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.35rem !important;
+  position: relative !important;
+}
+.clerk-auth-shell .cl-formFieldRow:empty {
+  display: none !important;
+}
+.clerk-auth-shell input,
+.clerk-auth-shell .cl-formFieldInput,
+.clerk-auth-shell input[type="email"],
+.clerk-auth-shell input[type="password"],
+.clerk-auth-shell input[type="text"] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  background-color: #111114 !important;
+  color: #fafafa !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+  min-height: 2.75rem !important;
+  height: 2.75rem !important;
+  margin: 0 !important;
+  padding: 0 2.5rem 0 0.875rem !important;
+  line-height: 1.25 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+.clerk-auth-shell input::placeholder {
+  color: #55555f !important;
+}
+.clerk-auth-shell input:-webkit-autofill {
+  -webkit-text-fill-color: #fafafa !important;
+  box-shadow: 0 0 0 1000px #111114 inset !important;
+}
+.clerk-auth-shell .cl-formFieldInputShowPasswordButton {
+  z-index: 2 !important;
+  right: 0.5rem !important;
+}
+.clerk-auth-shell .cl-formButtonPrimary {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  background: #fff !important;
+  color: #000 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+  text-transform: none !important;
+  min-height: 2.75rem !important;
+  height: 2.75rem !important;
+  font-weight: 700 !important;
+  margin: 0.25rem 0 0 !important;
+}
+.clerk-auth-shell .cl-formButtonPrimary:hover {
+  background: #f0f0f0 !important;
+}
+.clerk-auth-shell .cl-dividerRow {
+  margin: 0.15rem 0 !important;
+}
+.clerk-auth-shell .cl-dividerText {
+  color: #5c5c66 !important;
+  font-size: 10px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}
+.clerk-auth-shell .cl-formFieldLabel {
+  color: #8e8e93 !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin: 0 !important;
+}
+/* Identity preview step (after email continue) */
+.clerk-auth-shell .cl-identityPreview {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible for keyboard / a11y */
+:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 2px;
+}
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
 }
